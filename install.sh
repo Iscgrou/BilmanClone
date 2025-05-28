@@ -1,38 +1,25 @@
 #!/bin/bash
 
 # Bilman One-Link Installation Script
-# This script provides automated installation with domain and credential configuration
+# Complete automated installation with domain and credential configuration
+# Usage: curl -sSL https://your-repo.com/install.sh | bash
 
-set -e  # Exit on any error
+set -e
 
-echo "🚀 Bilman One-Link Installation"
-echo "==============================="
+echo "🚀 Bilman VPN Management System - One-Link Installation"
+echo "======================================================="
 
-# Color codes for output
-RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
+RED='\033[0;31m'
 BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 
-# Function to print colored output
-print_status() {
-    echo -e "${GREEN}[INFO]${NC} $1"
-}
+print_status() { echo -e "${GREEN}[SUCCESS]${NC} $1"; }
+print_warning() { echo -e "${YELLOW}[WARNING]${NC} $1"; }
+print_error() { echo -e "${RED}[ERROR]${NC} $1"; }
+print_header() { echo -e "${BLUE}[STEP]${NC} $1"; }
 
-print_warning() {
-    echo -e "${YELLOW}[WARNING]${NC} $1"
-}
-
-print_error() {
-    echo -e "${RED}[ERROR]${NC} $1"
-}
-
-print_header() {
-    echo -e "${BLUE}[STEP]${NC} $1"
-}
-
-# Function to prompt for user input
 prompt_user() {
     local prompt="$1"
     local var_name="$2"
@@ -41,166 +28,181 @@ prompt_user() {
     if [ "$is_password" = "true" ]; then
         echo -n "$prompt: "
         read -s user_input
-        echo  # New line after password input
+        echo
     else
         echo -n "$prompt: "
         read user_input
     fi
-    
     export $var_name="$user_input"
 }
 
-# Function to validate domain format
 validate_domain() {
-    local domain="$1"
-    if [[ $domain =~ ^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$ ]]; then
-        return 0
-    else
-        return 1
-    fi
+    [[ $1 =~ ^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$ ]]
 }
 
-# Function to validate username
 validate_username() {
-    local username="$1"
-    if [[ $username =~ ^[a-zA-Z0-9_]{3,20}$ ]]; then
-        return 0
-    else
-        return 1
-    fi
+    [[ $1 =~ ^[a-zA-Z0-9_]{3,20}$ ]]
 }
 
-# Function to validate password strength
 validate_password() {
-    local password="$1"
-    if [[ ${#password} -ge 8 ]]; then
-        return 0
-    else
-        return 1
-    fi
+    [[ ${#1} -ge 8 ]]
 }
 
-# Main installation function
 main() {
-    print_header "Starting Bilman Installation Process"
+    print_header "Checking Prerequisites"
     
-    # Check if Python is available
-    if ! command -v python3 &> /dev/null; then
-        print_error "Python 3 is required but not installed"
-        exit 1
+    # Check for required tools
+    for cmd in git node npm python3; do
+        if ! command -v $cmd &> /dev/null; then
+            print_error "$cmd is required but not installed"
+            exit 1
+        fi
+    done
+    print_status "All prerequisites found"
+    
+    # Clone repository if not exists
+    if [ ! -d "bilman" ]; then
+        print_header "Cloning Bilman Repository"
+        git clone https://github.com/Iscgrou/bilman.git
+        print_status "Repository cloned successfully"
+    else
+        print_status "Bilman repository already exists"
     fi
     
-    # Check if Git is available
-    if ! command -v git &> /dev/null; then
-        print_error "Git is required but not installed"
-        exit 1
-    fi
+    # Install Node.js dependencies
+    print_header "Installing Dependencies"
+    cd bilman
+    npm install
+    print_status "Dependencies installed"
     
-    print_status "Prerequisites check passed"
-    
-    # Collect configuration from user
+    # Configuration setup
     print_header "Configuration Setup"
-    echo "Please provide the following configuration details:"
+    echo "Please provide your deployment configuration:"
     echo
     
     # Domain configuration
     while true; do
-        prompt_user "Enter your domain (e.g., example.com)" "USER_DOMAIN" "false"
+        prompt_user "Enter your domain (e.g., vpn.example.com)" "USER_DOMAIN" "false"
         if validate_domain "$USER_DOMAIN"; then
             break
         else
-            print_error "Invalid domain format. Please enter a valid domain (e.g., example.com)"
+            print_error "Invalid domain format"
         fi
     done
     
-    # Username configuration
+    # Username configuration  
     while true; do
-        prompt_user "Enter username (3-20 alphanumeric characters)" "USER_USERNAME" "false"
+        prompt_user "Enter admin username (3-20 characters)" "USER_USERNAME" "false"
         if validate_username "$USER_USERNAME"; then
             break
         else
-            print_error "Invalid username. Must be 3-20 characters, alphanumeric and underscore only"
+            print_error "Invalid username format"
         fi
     done
     
     # Password configuration
     while true; do
-        prompt_user "Enter password (minimum 8 characters)" "USER_PASSWORD" "true"
+        prompt_user "Enter admin password (min 8 characters)" "USER_PASSWORD" "true"
         if validate_password "$USER_PASSWORD"; then
             prompt_user "Confirm password" "CONFIRM_PASSWORD" "true"
             if [ "$USER_PASSWORD" = "$CONFIRM_PASSWORD" ]; then
                 break
             else
-                print_error "Passwords do not match. Please try again."
+                print_error "Passwords do not match"
             fi
         else
-            print_error "Password must be at least 8 characters long"
+            print_error "Password too short"
         fi
     done
     
-    print_status "Configuration collected successfully"
+    print_status "Configuration collected"
     
-    # Export configuration as environment variables
-    export BILMAN_DOMAIN="$USER_DOMAIN"
-    export BILMAN_USERNAME="$USER_USERNAME"
-    export BILMAN_PASSWORD="$USER_PASSWORD"
-    
-    # Save configuration to file for Python script
-    cat > config.env << EOF
-BILMAN_DOMAIN=$USER_DOMAIN
-BILMAN_USERNAME=$USER_USERNAME
-BILMAN_PASSWORD=$USER_PASSWORD
+    # Create environment file
+    print_header "Setting up Environment"
+    cat > .env << EOF
+NODE_ENV=production
+PORT=3000
+NEXT_PUBLIC_DOMAIN=${USER_DOMAIN}
+
+# Database (PostgreSQL required)
+DATABASE_URL="postgresql://localhost:5432/bilman"
+
+# Authentication
+JWT_SECRET=bilman-jwt-secret-$(date +%s)
+JWT_EXPIRES_IN=7d
+
+# Admin Account
+ADMIN_USERNAME=${USER_USERNAME}
+ADMIN_PASSWORD=${USER_PASSWORD}
+
+# Deployment Info
+BILMAN_DOMAIN=${USER_DOMAIN}
+BILMAN_USERNAME=${USER_USERNAME}
+BILMAN_PASSWORD=${USER_PASSWORD}
+DEPLOYMENT_DATE=$(date)
+
+# Optional Services
+TELEGRAM_BOT_TOKEN=
+REDIS_URL=
+SMTP_HOST=
+SMTP_PORT=587
+SMTP_USER=
+SMTP_PASS=
 EOF
     
-    print_status "Configuration saved to config.env"
+    print_status "Environment configured"
     
-    # Install Python dependencies if requirements exist
-    if [ -f "requirements.txt" ]; then
-        print_header "Installing Python Dependencies"
-        pip install -r requirements.txt || {
-            print_warning "Failed to install some dependencies, continuing..."
-        }
+    # Setup database if available
+    print_header "Database Setup"
+    if command -v npx &> /dev/null; then
+        npx prisma generate 2>/dev/null || print_warning "Prisma setup pending"
+        npx prisma db push 2>/dev/null || print_warning "Database connection needed"
     fi
     
-    # Run the deployment script
-    print_header "Running Deployment Process"
-    python3 deploy.py || {
-        print_error "Deployment script failed"
-        exit 1
-    }
+    # Create deployment summary
+    cat > DEPLOYMENT_INFO.md << EOF
+# Bilman VPN Management System - Deployment Complete
+
+## Configuration
+- **Domain**: ${USER_DOMAIN}
+- **Admin Username**: ${USER_USERNAME}
+- **Deployment Date**: $(date)
+
+## Access
+- **Application**: http://localhost:3000
+- **Admin Panel**: Login with your credentials
+- **Configuration**: Available in web interface
+
+## Next Steps
+1. Start the application: \`npm run dev\`
+2. Access at: http://localhost:3000
+3. Login with admin credentials
+4. Configure additional services as needed
+
+## Features Available
+- User Management & Authentication
+- VPN Service Management  
+- Billing & Payment Tracking
+- Analytics Dashboard
+- Telegram Integration (configurable)
+- Multi-language Support
+
+## Support
+Check application logs and documentation for troubleshooting.
+EOF
     
-    # Start the web interface for final configuration
-    print_header "Starting Configuration Web Interface"
-    python3 web_interface.py &
-    WEB_PID=$!
+    print_header "🎉 Installation Complete!"
+    print_status "Bilman VPN Management System configured successfully"
+    print_status "Domain: ${USER_DOMAIN}"
+    print_status "Admin: ${USER_USERNAME}"
     
-    print_status "Web interface started on http://localhost:5000"
-    print_status "Complete the configuration in your browser"
-    
-    # Wait for user to complete web configuration
     echo
-    echo "Press Enter after completing web configuration to continue..."
-    read
-    
-    # Stop web interface
-    kill $WEB_PID 2>/dev/null || true
-    
-    print_header "Installation Complete"
-    print_status "Bilman has been successfully installed and configured"
-    print_status "Domain: $USER_DOMAIN"
-    print_status "Username: $USER_USERNAME"
-    print_status "Check deployment_report.json for detailed information"
-    
-    # Clean up sensitive files
-    rm -f config.env
-    
+    echo "📋 Quick Start:"
+    echo "  cd bilman"
+    echo "  npm run dev"
+    echo "  Open: http://localhost:3000"
     echo
-    echo "🎉 Installation completed successfully!"
-    echo "📋 Check the deployment logs for any additional information"
+    echo "🎉 Ready to deploy! Check DEPLOYMENT_INFO.md for details."
 }
 
-# Trap to clean up on exit
-trap 'print_warning "Installation interrupted"; exit 1' INT TERM
-
-# Run main function
 main "$@"

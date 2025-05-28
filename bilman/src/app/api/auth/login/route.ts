@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
-import { prisma } from 'src/lib/prisma'
+import { prisma } from '@/lib/prisma'
 import { SignJWT } from 'jose'
-import { generateCsrfToken, verifyCsrfToken, rateLimitMiddleware } from 'src/lib/security'
+import { generateCsrfToken, verifyCsrfToken, rateLimitMiddleware } from '@/lib/security'
 
 export async function POST(request: Request) {
   // Check rate limiting

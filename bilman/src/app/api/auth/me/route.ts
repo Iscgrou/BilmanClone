@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
 import { jwtVerify } from 'jose'
 import { cookies } from 'next/headers'
-import { prisma } from 'src/lib/prisma'
-import { verifyCsrfToken, generateCsrfToken } from 'src/lib/security'
+import { prisma } from '@/lib/prisma'
+import { verifyCsrfToken, generateCsrfToken } from '@/lib/security'
 
 export async function GET(request: Request) {
   try {
