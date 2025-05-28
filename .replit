@@ -16,6 +16,10 @@ author = "agent"
 task = "workflow.run"
 args = "BilmanWebInterface"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "BilmanApp"
+
 [[workflows.workflow]]
 name = "BilmanWebInterface"
 author = "agent"
@@ -23,6 +27,15 @@ author = "agent"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "python3 -m pip install flask werkzeug pyyaml requests && python3 web_interface.py"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "BilmanApp"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd ./bilman && npm run build && npm start"
 waitForPort = 5000
 
 [deployment]
