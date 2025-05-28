@@ -1,0 +1,349 @@
+/* Bilman Deployment Configuration Styles */
+
+:root {
+  --primary: 220 82% 54%; /* #2563eb */
+  --primary-dark: 220 82% 44%; /* #1d4ed8 */
+  --success: 142 76% 36%; /* #16a34a */
+  --warning: 45 93% 47%; /* #eab308 */
+  --danger: 0 84% 60%; /* #ef4444 */
+  --info: 199 89% 48%; /* #0ea5e9 */
+  --light: 210 20% 98%; /* #f8fafc */
+  --dark: 220 13% 18%; /* #1e293b */
+  --muted: 215 16% 47%; /* #64748b */
+}
+
+body {
+  background: linear-gradient(135deg, hsl(var(--light)) 0%, hsl(220 20% 95%) 100%);
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header Styles */
+header h1 {
+  color: hsl(var(--primary));
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Card Styles */
+.card {
+  border: none;
+  border-radius: 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+.card-header {
+  border-radius: 12px 12px 0 0 !important;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  font-weight: 600;
+}
+
+/* Form Styles */
+.form-control {
+  border-radius: 8px;
+  border: 2px solid hsl(215 20% 90%);
+  padding: 12px 16px;
+  transition: all 0.2s ease;
+}
+
+.form-control:focus {
+  border-color: hsl(var(--primary));
+  box-shadow: 0 0 0 3px hsla(var(--primary), 0.1);
+}
+
+.form-label {
+  font-weight: 600;
+  color: hsl(var(--dark));
+  margin-bottom: 8px;
+}
+
+.form-label i {
+  margin-right: 8px;
+  color: hsl(var(--primary));
+}
+
+/* Button Styles */
+.btn {
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: hsl(var(--primary));
+  border-color: hsl(var(--primary));
+}
+
+.btn-primary:hover {
+  background: hsl(var(--primary-dark));
+  border-color: hsl(var(--primary-dark));
+  transform: translateY(-1px);
+}
+
+.btn-outline-primary {
+  color: hsl(var(--primary));
+  border-color: hsl(var(--primary));
+}
+
+.btn-outline-primary:hover {
+  background: hsl(var(--primary));
+  border-color: hsl(var(--primary));
+}
+
+/* Progress Step Styles */
+.progress-step {
+  display: flex;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid hsl(215 20% 90%);
+  transition: all 0.2s ease;
+}
+
+.progress-step:last-child {
+  border-bottom: none;
+}
+
+.progress-step.completed {
+  opacity: 1;
+}
+
+.progress-step.completed .step-icon {
+  background: hsl(var(--success));
+  color: white;
+}
+
+.progress-step.active {
+  background: linear-gradient(90deg, hsla(var(--primary), 0.05) 0%, transparent 100%);
+  border-radius: 8px;
+  margin: 0 -16px;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+.progress-step.active .step-icon {
+  background: hsl(var(--primary));
+  color: white;
+  animation: pulse 2s infinite;
+}
+
+.step-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: hsl(215 20% 90%);
+  color: hsl(var(--muted));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16px;
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+
+.step-content h6 {
+  margin: 0 0 4px 0;
+  font-weight: 600;
+  color: hsl(var(--dark));
+}
+
+.step-content p {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* Logs Container */
+.logs-container {
+  max-height: 300px;
+  overflow-y: auto;
+  background: hsl(220 13% 96%);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.log-entry {
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  padding: 4px 0;
+  border-bottom: 1px solid hsl(215 20% 85%);
+}
+
+.log-entry:last-child {
+  border-bottom: none;
+}
+
+.log-entry.error {
+  color: hsl(var(--danger));
+}
+
+.log-entry.warning {
+  color: hsl(var(--warning));
+}
+
+.log-entry.info {
+  color: hsl(var(--info));
+}
+
+/* Status Indicators */
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 4px 0;
+}
+
+.status-indicator.success {
+  background: hsla(var(--success), 0.1);
+  color: hsl(var(--success));
+}
+
+.status-indicator.warning {
+  background: hsla(var(--warning), 0.1);
+  color: hsl(var(--warning));
+}
+
+.status-indicator.error {
+  background: hsla(var(--danger), 0.1);
+  color: hsl(var(--danger));
+}
+
+.status-indicator i {
+  margin-right: 6px;
+}
+
+/* Alert Styles */
+.alert {
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.alert-success {
+  background: hsla(var(--success), 0.1);
+  color: hsl(var(--success));
+  border-left: 4px solid hsl(var(--success));
+}
+
+.alert-danger {
+  background: hsla(var(--danger), 0.1);
+  color: hsl(var(--danger));
+  border-left: 4px solid hsl(var(--danger));
+}
+
+.alert-warning {
+  background: hsla(var(--warning), 0.1);
+  color: hsl(var(--warning));
+  border-left: 4px solid hsl(var(--warning));
+}
+
+.alert-info {
+  background: hsla(var(--info), 0.1);
+  color: hsl(var(--info));
+  border-left: 4px solid hsl(var(--info));
+}
+
+/* Animations */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease;
+}
+
+/* Loading Spinner */
+.spinner-border {
+  width: 2rem;
+  height: 2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container-fluid {
+    padding: 0 15px;
+  }
+  
+  header h1 {
+    font-size: 2rem;
+  }
+  
+  .card-body {
+    padding: 20px;
+  }
+  
+  .progress-step {
+    padding: 12px 0;
+  }
+  
+  .step-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+  
+  .btn {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}
+
+/* Utility Classes */
+.text-primary {
+  color: hsl(var(--primary)) !important;
+}
+
+.bg-primary {
+  background-color: hsl(var(--primary)) !important;
+}
+
+.border-primary {
+  border-color: hsl(var(--primary)) !important;
+}
+
+.shadow {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Custom Scrollbar */
+.logs-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.logs-container::-webkit-scrollbar-track {
+  background: hsl(215 20% 90%);
+  border-radius: 3px;
+}
+
+.logs-container::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted));
+  border-radius: 3px;
+}
+
+.logs-container::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--dark));
+}

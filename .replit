@@ -1,0 +1,33 @@
+modules = ["python-3.11"]
+
+[nix]
+channel = "stable-24_05"
+packages = ["libyaml"]
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "BilmanWebInterface"
+
+[[workflows.workflow]]
+name = "BilmanWebInterface"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python3 -m pip install flask werkzeug pyyaml requests && python3 web_interface.py"
+waitForPort = 5000
+
+[deployment]
+run = ["sh", "-c", "python3 -m pip install flask werkzeug pyyaml requests && python3 web_interface.py"]
+
+[[ports]]
+localPort = 5000
+externalPort = 80
