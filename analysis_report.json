@@ -1,0 +1,196 @@
+{
+  "project_path": "./bilman",
+  "project_type": {
+    "primary": "nodejs",
+    "technologies": [
+      "javascript"
+    ],
+    "frameworks": [
+      "react",
+      "nextjs"
+    ]
+  },
+  "structure": {
+    "total_files": 101,
+    "total_directories": 31,
+    "file_types": {
+      ".example": 1,
+      ".md": 5,
+      ".json": 5,
+      ".yml": 1,
+      ".js": 3,
+      ".conf": 1,
+      ".jpeg": 1,
+      ".ts": 15,
+      ".prisma": 1,
+      ".svg": 3,
+      ".sh": 3,
+      ".css": 2,
+      ".tsx": 59
+    },
+    "important_files": [
+      ".env.example",
+      "Dockerfile",
+      "README.md",
+      "docker-compose.yml",
+      "package.json",
+      "scripts/README.md"
+    ],
+    "directories": [
+      "artifacts",
+      "lib",
+      "prisma",
+      "public",
+      "scripts",
+      "src",
+      "src/app",
+      "src/app/accounting",
+      "src/app/analytics",
+      "src/app/api",
+      "src/app/api/auth",
+      "src/app/api/auth/login",
+      "src/app/api/auth/logout",
+      "src/app/api/auth/me",
+      "src/app/dashboard",
+      "src/app/invoices",
+      "src/app/invoices/status",
+      "src/app/login",
+      "src/app/representatives",
+      "src/app/representatives/[id]",
+      "src/app/representatives/[id]/payments",
+      "src/app/representatives/referral",
+      "src/components",
+      "src/components/ui",
+      "src/contexts",
+      "src/hooks",
+      "src/lib",
+      "src/locales",
+      "src/locales/fa",
+      "src/styles",
+      "src/types"
+    ]
+  },
+  "dependencies": {
+    "nodejs": {
+      "dependencies": {
+        "@prisma/client": "^5.22.0",
+        "axios": "^1.6.7",
+        "bcryptjs": "^2.4.3",
+        "chart.js": "^4.4.1",
+        "class-variance-authority": "^0.7.0",
+        "clsx": "^2.1.0",
+        "csrf": "^3.1.0",
+        "express-rate-limit": "^7.5.0",
+        "i18next": "^25.2.1",
+        "jose": "^6.0.11",
+        "jsonwebtoken": "^8.5.1",
+        "next": "^15.3.2",
+        "node-telegram-bot-api": "^0.64.0",
+        "nodemailer": "^7.0.3",
+        "react": "^18.2.0",
+        "react-chartjs-2": "^5.2.0",
+        "react-dom": "^18.2.0",
+        "react-i18next": "^15.5.2",
+        "tailwind-merge": "^2.2.1",
+        "tailwindcss": "^3.3.2",
+        "tailwindcss-animate": "^1.0.7",
+        "zod": "^3.22.4"
+      },
+      "devDependencies": {
+        "@playwright/test": "^1.41.0",
+        "@testing-library/jest-dom": "^6.4.0",
+        "@testing-library/react": "^14.2.0",
+        "@types/bcryptjs": "^2.4.6",
+        "@types/jest": "^29.5.2",
+        "@types/jsonwebtoken": "^9.0.9",
+        "@types/node": "^20.17.51",
+        "@types/node-telegram-bot-api": "^0.64.0",
+        "@types/react": "^18.3.23",
+        "@types/react-dom": "^18.3.7",
+        "@typescript-eslint/eslint-plugin": "^6.19.0",
+        "@typescript-eslint/parser": "^6.19.0",
+        "autoprefixer": "^10.4.14",
+        "eslint": "^8.56.0",
+        "eslint-config-next": "14.1.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-plugin-jest": "^27.6.3",
+        "eslint-plugin-react": "^7.33.2",
+        "eslint-plugin-react-hooks": "^4.6.0",
+        "husky": "^8.0.3",
+        "jest": "^29.7.0",
+        "jest-environment-jsdom": "^29.7.0",
+        "lint-staged": "^15.2.0",
+        "postcss": "^8.4.24",
+        "prettier": "^3.2.4",
+        "prisma": "^5.9.0",
+        "ts-jest": "^29.1.0",
+        "typescript": "^5.8.3"
+      },
+      "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint",
+        "format": "prettier --write .",
+        "test": "jest",
+        "test:watch": "jest --watch",
+        "test:e2e": "playwright test",
+        "prepare": "husky install",
+        "db:migrate": "prisma migrate deploy",
+        "db:studio": "prisma studio"
+      }
+    },
+    "python": {},
+    "system": [],
+    "issues": []
+  },
+  "configuration": {
+    "config_files": [
+      ".env.example",
+      "nginx.conf"
+    ],
+    "environment_files": [
+      ".env.example"
+    ],
+    "docker_files": [
+      "Dockerfile",
+      "docker-compose.yml",
+      ".devcontainer/Dockerfile"
+    ],
+    "database_config": {
+      "detected_databases": [
+        "postgresql",
+        "redis"
+      ]
+    },
+    "port_configuration": null
+  },
+  "potential_issues": [
+    {
+      "type": "hardcoded_config",
+      "severity": "medium",
+      "description": "Potential hardcoded passwords found in docker-compose.yml"
+    },
+    {
+      "type": "hardcoded_config",
+      "severity": "medium",
+      "description": "Hardcoded localhost references found in .codesandbox/tasks.json"
+    },
+    {
+      "type": "missing_env",
+      "severity": "low",
+      "description": "No environment configuration files found"
+    }
+  ],
+  "recommendations": [
+    "Consider using PM2 for process management in production",
+    "Move hardcoded configurations to environment variables",
+    "Move hardcoded configurations to environment variables",
+    "Create environment configuration files for different deployment stages",
+    "Ensure database services are available: postgresql, redis",
+    "Add health check endpoints for monitoring",
+    "Implement logging for debugging deployment issues",
+    "Set up error handling for production environment",
+    "Consider adding Docker support for consistent deployments"
+  ]
+}

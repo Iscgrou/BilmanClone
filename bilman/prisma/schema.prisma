@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  OPERATOR
+  REPRESENTATIVE
+}
+
+model User {
+  id            String    @id @default(cuid())
+  username      String    @unique
+  password      String
+  role          UserRole
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  representative Representative?
+}
+
+model Representative {
+  id            String    @id @default(cuid())
+  userId        String    @unique
+  user          User      @relation(fields: [userId], references: [id])
+  fullName      String
+  telegramId    String?   @unique
+  referralCode  String    @unique
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  invoices      Invoice[]
+  payments      Payment[]
+  referredBy    String?
+  referrer      Representative?  @relation("ReferralChain", fields: [referredBy], references: [id])
+  referrals     Representative[] @relation("ReferralChain")
+}
+
+model Invoice {
+  id              String        @id @default(cuid())
+  representativeId String
+  representative   Representative @relation(fields: [representativeId], references: [id])
+  amount          Float
+  status          String        // PENDING, PAID, OVERDUE
+  dueDate         DateTime
+  paidAt          DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  payments        Payment[]
+}
+
+model Payment {
+  id              String        @id @default(cuid())
+  invoiceId       String
+  invoice         Invoice       @relation(fields: [invoiceId], references: [id])
+  representativeId String
+  representative   Representative @relation(fields: [representativeId], references: [id])
+  amount          Float
+  method          String        // BANK_TRANSFER, CRYPTO, etc.
+  status          String        // PENDING, CONFIRMED, REJECTED
+  transactionId   String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model Analytics {
+  id              String    @id @default(cuid())
+  metric          String    // SALES, PAYMENTS, ACTIVE_REPS, etc.
+  value           Float
+  timestamp       DateTime  @default(now())
+  metadata        Json?     // Additional data specific to the metric
+}

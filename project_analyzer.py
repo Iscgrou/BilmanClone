@@ -342,17 +342,22 @@ class ProjectAnalyzer:
         issues = []
         
         # Check for missing important files
-        if self.analysis_result["project_type"]["primary"] == "nodejs":
-            if "package.json" not in [os.path.basename(f) for f in self.analysis_result["structure"]["important_files"]]:
+        project_type = self.analysis_result.get("project_type", {})
+        if project_type.get("primary") == "nodejs":
+            structure = self.analysis_result.get("structure", {})
+            important_files = structure.get("important_files", [])
+            if "package.json" not in [os.path.basename(f) for f in important_files]:
                 issues.append({
                     "type": "missing_file",
                     "severity": "high",
                     "description": "Missing package.json file for Node.js project"
                 })
         
-        elif self.analysis_result["project_type"]["primary"] == "python":
-            has_requirements = any("requirements.txt" in f for f in self.analysis_result["structure"]["important_files"])
-            has_setup = any("setup.py" in f for f in self.analysis_result["structure"]["important_files"])
+        elif project_type.get("primary") == "python":
+            structure = self.analysis_result.get("structure", {})
+            important_files = structure.get("important_files", [])
+            has_requirements = any("requirements.txt" in f for f in important_files)
+            has_setup = any("setup.py" in f for f in important_files)
             if not has_requirements and not has_setup:
                 issues.append({
                     "type": "missing_file",
@@ -387,7 +392,9 @@ class ProjectAnalyzer:
                         continue
         
         # Check for missing environment configuration
-        env_files = [f for f in self.analysis_result["structure"]["important_files"] if '.env' in f]
+        structure = self.analysis_result.get("structure", {})
+        important_files = structure.get("important_files", [])
+        env_files = [f for f in important_files if '.env' in f]
         if not env_files:
             issues.append({
                 "type": "missing_env",

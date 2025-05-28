@@ -135,7 +135,7 @@ class BilmanDeployer:
         
         # Add and commit changes
         success1, _, _ = self.run_command("git add .", cwd=self.project_dir)
-        success2, _, _ = self.run_command(f"git commit -m '{message}'", cwd=self.project_dir)
+        success2, _, _ = self.run_command(f'git commit -m "{message}"', cwd=self.project_dir)
         
         if success1 and success2:
             logger.info("Changes committed successfully")
