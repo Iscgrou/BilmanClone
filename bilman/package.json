@@ -46,9 +46,9 @@
     "@types/bcryptjs": "^2.4.6",
     "@types/jest": "^29.5.2",
     "@types/jsonwebtoken": "^9.0.9",
-    "@types/node": "^20.17.51",
+    "@types/node": "20.17.51",
     "@types/node-telegram-bot-api": "^0.64.0",
-    "@types/react": "^18.3.23",
+    "@types/react": "18.3.23",
     "@types/react-dom": "^18.3.7",
     "@typescript-eslint/eslint-plugin": "^6.19.0",
     "@typescript-eslint/parser": "^6.19.0",
@@ -67,7 +67,7 @@
     "prettier": "^3.2.4",
     "prisma": "^5.9.0",
     "ts-jest": "^29.1.0",
-    "typescript": "^5.8.3"
+    "typescript": "5.8.3"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
