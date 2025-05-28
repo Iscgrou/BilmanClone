@@ -171,6 +171,32 @@ def get_logs():
         logger.error(f"Failed to get logs: {e}")
         return jsonify({'success': False, 'error': str(e)})
 
+@app.route('/install')
+def serve_install_script():
+    """Serve the Ubuntu installation script"""
+    try:
+        script_path = os.path.join(os.path.dirname(__file__), 'ubuntu_install.sh')
+        if os.path.exists(script_path):
+            with open(script_path, 'r') as f:
+                script_content = f.read()
+            
+            response = app.response_class(
+                response=script_content,
+                status=200,
+                mimetype='text/plain'
+            )
+            response.headers['Cache-Control'] = 'no-cache'
+            return response
+        else:
+            return "Installation script not found", 404
+    except Exception as e:
+        return f"Error serving script: {str(e)}", 500
+
+@app.route('/ubuntu_install.sh')
+def serve_install_script_alt():
+    """Alternative endpoint for the installation script"""
+    return serve_install_script()
+
 def _validate_domain(domain: str) -> bool:
     """Validate domain format"""
     import re
